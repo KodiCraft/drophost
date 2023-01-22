@@ -1,6 +1,6 @@
 [package]
 name = "drophost"
-version = "0.2.1"
+version = "0.2.2"
 edition = "2021"
 license = "MIT"
 description = "A simple drop-in based /etc/hosts manager"
@@ -26,7 +26,7 @@ once_cell = "1.17.0"
 env_logger = "0.10.0"
 
 [features]
-default = ["ping"]
+default = []
 ping = ["dep:oping"]
 range = ["dep:iprange", "dep:network-interface", "dep:ipnet"]
 interface = ["dep:network-interface"]
