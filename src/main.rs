@@ -2,6 +2,9 @@
 #![allow(dead_code)]
 #![allow(unused_imports)]
 
+#[cfg(feature = "interface")]
+compile_warning!(The "interface" feature is not currently implemented.);
+
 mod cli;
 mod writer;
 mod types;
@@ -9,35 +12,67 @@ mod parser;
 mod utils;
 
 
-use std::path;
+use std::path::{self, Path};
+use notify::{RecommendedWatcher, RecursiveMode, recommended_watcher, Watcher};
 
 use clap::Parser;
+use once_cell::sync::Lazy;
 use pretty_env_logger;
 use log::*;
-use nix::unistd::Uid;
+use nix::{unistd::Uid, sys};
 use proc_macros::compile_warning;
 
-fn main() {
+static OPTS: Lazy<cli::Opts> = Lazy::new(|| cli::Opts::parse());
+
+#[tokio::main]
+async fn main() {
     pretty_env_logger::init();
 
-    let opts: cli::Opts = cli::Opts::parse();
-
-    debug!("Starting with options: {:?}", opts);
+    debug!("Starting with options: {:?}", OPTS);
     debug!("Running as user: {}", Uid::current().as_raw());
 
-    run(opts);
+    if OPTS.backup {
+        backup();
+    }
+
+    run();
+
+    if OPTS.watch {
+        watch().await;
+    }
 }
 
-fn run(opts: cli::Opts) {
+fn backup() {
     let root_prefix: &str;
-    if opts.dry_run {
+    if OPTS.dry_run {
         info!("Dry run, not replacing system files");
         root_prefix = "./output";
     } else {
         root_prefix = "/etc";
     }
 
-    if !Uid::current().is_root() && !opts.dry_run {
+    if !Uid::current().is_root() && !OPTS.dry_run {
+        error!("Must run as root! Use --dry-run to test without root");
+        std::process::exit(1);
+    }
+
+    let file = root_prefix.to_owned() + "/hosts";
+    let backup_file = root_prefix.to_owned() + "/hosts.d/backup.conf";
+
+    let res = std::fs::copy(&file, &backup_file);
+    let _ = utils::unwrap_result_or_err(res, "Could not backup hosts file!", true);
+}
+
+fn run() {
+    let root_prefix: &str;
+    if OPTS.dry_run {
+        info!("Dry run, not replacing system files");
+        root_prefix = "./output";
+    } else {
+        root_prefix = "/etc";
+    }
+
+    if !Uid::current().is_root() && !OPTS.dry_run {
         error!("Must run as root! Use --dry-run to test without root");
         std::process::exit(1);
     }
@@ -51,4 +86,41 @@ fn run(opts: cli::Opts) {
     let output_path = root_prefix.to_owned() + "/hosts";
 
     writer::write_hosts_to_file(&dir_reader.hosts, &output_path);
+}
+
+async fn watch() {
+    let root_prefix: &str;
+    if OPTS.dry_run {
+        info!("Dry run, not replacing system files");
+        root_prefix = "./output";
+    } else {
+        root_prefix = "/etc";
+    }
+
+    if !Uid::current().is_root() && !OPTS.dry_run {
+        error!("Must run as root! Use --dry-run to test without root");
+        std::process::exit(1);
+    }
+
+    let dir = root_prefix.to_owned() + "/hosts.d";
+
+    let path = Path::new(&dir);
+
+    let mut watcher = recommended_watcher(handler).unwrap();
+
+    watcher.watch(&path, RecursiveMode::Recursive).unwrap();
+
+    loop {
+        std::thread::park();
+    }
+}
+
+fn handler(res: notify::Result<notify::Event>) {
+    match res {
+        Ok(event) => {
+            debug!("Event: {:?}", event);
+            let _ = run();
+        },
+        Err(e) => error!("watch error: {:?}", e),
+    }
 }

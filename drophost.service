@@ -1,0 +1,8 @@
+[Service]
+Type=simple
+ExecStart=/usr/bin/drophost -w
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=network-online.target

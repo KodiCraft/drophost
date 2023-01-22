@@ -11,6 +11,7 @@ use std::path::{Path, PathBuf};
 use std::boxed::Box;
 use std::str::{FromStr};
 
+#[cfg(any(feature = "interface", feature = "range"))]
 use network_interface::{NetworkInterface, NetworkInterfaceConfig};
 
 use crate::types::{Hosts, Host};
@@ -168,7 +169,7 @@ impl FileReader {
         }
         if line.starts_with("try ") {
             let attempt = line.trim_start_matches("try ");
-            self.add_upcoming = self.parse_conditional(attempt);
+            self.add_upcoming = self.parse_try(attempt);
             self.parse_state = ParseState::Conditional;
             return true;
         }

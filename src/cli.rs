@@ -10,4 +10,8 @@ pub struct Opts {
     /// Watch the hosts.d directory for changes and update the hosts file
     #[clap(short, long, default_value = "false")]
     pub watch: bool,
+
+    /// Save current hosts file to a backup file
+    #[clap(short, long, default_value = "false")]
+    pub backup: bool,
 }
