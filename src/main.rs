@@ -17,7 +17,7 @@ use notify::{RecommendedWatcher, RecursiveMode, recommended_watcher, Watcher};
 
 use clap::Parser;
 use once_cell::sync::Lazy;
-use pretty_env_logger;
+use env_logger::{self, Builder};
 use log::*;
 use nix::{unistd::Uid, sys};
 use proc_macros::compile_warning;
@@ -26,7 +26,10 @@ static OPTS: Lazy<cli::Opts> = Lazy::new(|| cli::Opts::parse());
 
 #[tokio::main]
 async fn main() {
-    pretty_env_logger::init();
+    Builder::new()
+        .filter_level(OPTS.log_level)
+        .format_timestamp(Some(env_logger::TimestampPrecision::Seconds))
+        .init();
 
     debug!("Starting with options: {:?}", OPTS);
     debug!("Running as user: {}", Uid::current().as_raw());

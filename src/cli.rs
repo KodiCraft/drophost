@@ -14,4 +14,8 @@ pub struct Opts {
     /// Save current hosts file to a backup file
     #[clap(short, long, default_value = "false")]
     pub backup: bool,
+
+    /// Log level: trace, debug, info, warn, error, off
+    #[clap(short, long, default_value = "info")]
+    pub log_level: log::LevelFilter,
 }

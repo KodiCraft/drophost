@@ -209,8 +209,8 @@ impl FileReader {
             return false;
         }
 
-        let hostname = hostname.unwrap();
-        let ip = ip.unwrap();
+        let hostname = self.parse_var_or_literal(hostname.unwrap());
+        let ip = self.parse_var_or_literal(ip.unwrap());
 
         let host = Host::new(hostname.to_string(), ip.to_string());
         self.hosts.add(host);
