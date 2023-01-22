@@ -20,7 +20,7 @@ use once_cell::sync::Lazy;
 use env_logger::{self, Builder};
 use log::*;
 use nix::{unistd::Uid, sys};
-use proc_macros::compile_warning;
+use compile_warning::compile_warning;
 
 static OPTS: Lazy<cli::Opts> = Lazy::new(|| cli::Opts::parse());
 

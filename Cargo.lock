@@ -79,6 +79,11 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "3423d0624461b4e4d10a8f37c2d02f4f83de73f2e3e7705f168927528a49e7e7"
 
 [[package]]
+name = "compile_warning"
+version = "0.1.0"
+source = "git+https://github.com/KodiCraft/compile_warning.git#1928999b4536b5374fed2b779d8dce4fac8604da"
+
+[[package]]
 name = "crossbeam-channel"
 version = "0.5.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -103,6 +108,7 @@ version = "0.2.0"
 dependencies = [
  "clap",
  "compile_msg",
+ "compile_warning",
  "env_logger",
  "ipnet",
  "iprange",
@@ -112,7 +118,6 @@ dependencies = [
  "notify",
  "once_cell",
  "oping",
- "proc_macros",
  "tokio",
 ]
 
@@ -444,10 +449,6 @@ checksum = "6ef7d57beacfaf2d8aee5937dab7b7f28de3cb8b1828479bb5de2a7106f2bae2"
 dependencies = [
  "unicode-ident",
 ]
-
-[[package]]
-name = "proc_macros"
-version = "0.1.0"
 
 [[package]]
 name = "quote"

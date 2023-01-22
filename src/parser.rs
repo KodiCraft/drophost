@@ -1,7 +1,7 @@
 use crate::utils::*;
 
 use log::*;
-use proc_macros::compile_warning;
+use compile_warning::compile_warning;
 
 use std::collections::HashMap;
 use std::fs::{self, File};
