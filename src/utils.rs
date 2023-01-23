@@ -32,42 +32,12 @@ impl Error for CustomError {
 }
 
 
-pub fn unwrap_or_err<T>(result: Option<T>, message: &str, fatal: bool) -> Result<T, Box<dyn Error>> {
-        let e = CustomError {
-            message: message.to_string(),
-            cause: None,
-            fatal,
-        };
-        match result {
-            Some(result) => Ok(result),
-            None => {
-                error!("{}", e.message);
-                print_trace();
-                if e.fatal {
-                    std::process::exit(1);
-                } else {
-                    Err(Box::new(e))
-                }
-            }
-        }
-}
-
-fn print_cause(cause: &dyn Error) {
-    trace!("Caused by: {}", cause);
-    if let Some(cause) = cause.source() {
-        print_cause(cause);
-    }
-}
-
-fn print_trace() {
-    let backtrace = Backtrace::capture();
-    match backtrace.status() {
+macro_rules! print_trace {
+    () => {
+        let backtrace = Backtrace::capture();
+        match backtrace.status() {
         Captured => {
-            // Remove the first 2 frames from the backtrace, as they are
-            // just this function and the panic handler
-            let btstring = backtrace.to_string();
-            let lines = btstring.lines().skip(2);
-            for line in lines {
+            for line in backtrace.to_string().lines() {
                 trace!("At: {}", line);
             }
         },
@@ -85,6 +55,35 @@ fn print_trace() {
             warn!("An unknown error occurred while capturing the backtrace")
         }
     }
+    };
+}
+
+
+pub fn unwrap_or_err<T>(result: Option<T>, message: &str, fatal: bool) -> Result<T, Box<dyn Error>> {
+        let e = CustomError {
+            message: message.to_string(),
+            cause: None,
+            fatal,
+        };
+        match result {
+            Some(result) => Ok(result),
+            None => {
+                error!("{}", e.message);
+                print_trace!();
+                if e.fatal {
+                    std::process::exit(1);
+                } else {
+                    Err(Box::new(e))
+                }
+            }
+        }
+}
+
+fn print_cause(cause: &dyn Error) {
+    trace!("Caused by: {}", cause);
+    if let Some(cause) = cause.source() {
+        print_cause(cause);
+    }
 }
 
 pub fn unwrap_result_or_err<T: Debug, E>(result: Result<T, E>, message: &str, fatal: bool) -> Result<T, Box<dyn Error>>
@@ -98,8 +97,8 @@ pub fn unwrap_result_or_err<T: Debug, E>(result: Result<T, E>, message: &str, fa
                     fatal,
                 };
                 error!("{}", e.message);
-                print_trace();
                 print_cause(e.cause.as_ref().unwrap().as_ref());
+                print_trace!();
                 if e.fatal {
                     std::process::exit(1);
                 } else {
