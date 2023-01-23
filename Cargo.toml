@@ -1,6 +1,6 @@
 [package]
 name = "drophost"
-version = "0.2.4"
+version = "0.2.6"
 edition = "2021"
 license = "MIT"
 description = "A simple drop-in based /etc/hosts manager"

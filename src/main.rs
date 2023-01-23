@@ -60,7 +60,7 @@ fn backup() {
     }
 
     let file = root_prefix.to_owned() + "/hosts";
-    let backup_file = root_prefix.to_owned() + "/hosts.d/backup.conf";
+    let backup_file = root_prefix.to_owned() + "/hosts.d/10-old-config.conf";
 
     // Create target directory if it doesn't exist
     let dir = root_prefix.to_owned() + "/hosts.d";

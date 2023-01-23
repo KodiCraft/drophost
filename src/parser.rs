@@ -56,10 +56,14 @@ impl DirReader {
         let dir_read = unwrap_result_or_err(dir_read_res,
                                         "Failed to read directory!",
                                         true).expect("This should never happen! (DirReader::new)");
+
+        // Sort the files by name alphabetically
+        let mut dir_read: Vec<_> = dir_read.collect();
+        dir_read.sort_by_key(|entry| entry.as_ref().unwrap().path());
+
         
-        let files = dir_read.map(|res| res.map(|e| e.path()))
-                            .collect::<Result<Vec<_>, std::io::Error>>()
-                            .expect("This should never happen! (DirReader::new)");
+        let files = dir_read.iter().map(|res| res.as_ref().unwrap().path())
+                            .collect::<Vec<_>>();
 
         // Add all of the user's environment variables to the vars map with the name 'env_VARNAME'
         let mut vars = HashMap::new();
