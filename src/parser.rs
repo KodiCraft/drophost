@@ -10,6 +10,7 @@ use std::net::{IpAddr};
 use std::path::{Path, PathBuf};
 use std::boxed::Box;
 use std::str::{FromStr};
+use std::collections::VecDeque;
 
 #[cfg(any(feature = "interface", feature = "range"))]
 use network_interface::{NetworkInterface, NetworkInterfaceConfig};
@@ -118,7 +119,7 @@ pub struct FileReader {
     pub line_index: usize,
 
     pub vars: HashMap<String, String>,
-    pub add_upcoming: bool,
+    pub cond_stack: VecDeque<bool>,
 }
 
 impl FileReader {
@@ -138,6 +139,9 @@ impl FileReader {
         let lines = contents.lines();
         let lines = lines.map(|x| x.to_owned()).collect();
 
+        let mut stack = VecDeque::new();
+        stack.push_back(true);
+
         FileReader {
             path: Box::new(path.to_owned()),
             hosts: Box::new(Hosts::new()),
@@ -145,12 +149,13 @@ impl FileReader {
             lines,
             line_index: 0,
             vars,
-            add_upcoming: false,
+            cond_stack: stack,
         }
     }
 
     fn parse(&mut self) -> bool {
         let line = self.lines[self.line_index - 1].clone();
+        let line = line.trim().to_owned();
         if line.starts_with("#=>") {
             let warning = line.trim_start_matches("#=>");
             warn!("Warning raised while parsing file: {}", warning);
@@ -164,12 +169,13 @@ impl FileReader {
             // Parse the conditional
             let cond = line.trim_start_matches("if ");
             let cond = self.parse_conditional(cond);
-            self.add_upcoming = cond;
+            self.cond_stack.push_back(cond);
             return true;
         }
         if line.starts_with("try ") {
             let attempt = line.trim_start_matches("try ");
-            self.add_upcoming = self.parse_try(attempt);
+            let attempt = self.parse_try(attempt);
+            self.cond_stack.push_back(attempt);
             self.parse_state = ParseState::Conditional;
             return true;
         }
@@ -228,6 +234,7 @@ impl FileReader {
         }
 
         let line = &self.lines[self.line_index - 1].clone();
+        let line = line.trim().to_owned();
         match self.parse_state {
             ParseState::Normal => {
                 return self.parse();
@@ -235,16 +242,18 @@ impl FileReader {
 
             ParseState::Conditional => {
                 if line.starts_with("else") {
-                    self.add_upcoming = !self.add_upcoming;
+                    let current_cond = self.cond_stack.pop_back().unwrap();
+                    self.cond_stack.push_back(!current_cond);
                     return true;
                 }
 
                 if line.starts_with("end") {
+                    self.cond_stack.pop_back();
                     self.parse_state = ParseState::Normal;
                     return true;
                 }
 
-                if self.add_upcoming {
+                if self.cond_stack.back().unwrap() == &true {
                     return self.parse();
                 }
 

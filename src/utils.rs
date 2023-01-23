@@ -71,7 +71,11 @@ pub fn unwrap_or_err<T>(result: Option<T>, message: &str, fatal: bool) -> Result
                 error!("{}", e.message);
                 print_trace!();
                 if e.fatal {
+                    #[cfg(not(test))]
                     std::process::exit(1);
+                    #[cfg(test)]
+                    // Panicking can be caught by tests, exiting cannot
+                    panic!("{}", e.message);
                 } else {
                     Err(Box::new(e))
                 }
@@ -100,7 +104,11 @@ pub fn unwrap_result_or_err<T: Debug, E>(result: Result<T, E>, message: &str, fa
                 print_cause(e.cause.as_ref().unwrap().as_ref());
                 print_trace!();
                 if e.fatal {
+                    #[cfg(not(test))]
                     std::process::exit(1);
+                    #[cfg(test)]
+                    // Panicking can be caught by tests, exiting cannot
+                    panic!("{}", e.message);
                 } else {
                     Err(Box::new(e))
                 }

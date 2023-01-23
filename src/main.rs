@@ -10,7 +10,7 @@ mod writer;
 mod types;
 mod parser;
 mod utils;
-
+mod tests;
 
 use std::path::{self, Path};
 use notify::{RecommendedWatcher, RecursiveMode, recommended_watcher, Watcher};
