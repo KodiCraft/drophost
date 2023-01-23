@@ -1,0 +1,3 @@
+[submodule "compile_warning"]
+path = compile_warning
+url = https://github.com/KodiCraft/compile_warning.git
