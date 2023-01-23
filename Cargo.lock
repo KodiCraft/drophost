@@ -73,12 +73,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "compile_msg"
-version = "0.1.5"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3423d0624461b4e4d10a8f37c2d02f4f83de73f2e3e7705f168927528a49e7e7"
-
-[[package]]
 name = "compile_warning"
 version = "0.1.0"
 
@@ -106,7 +100,6 @@ name = "drophost"
 version = "0.2.3"
 dependencies = [
  "clap",
- "compile_msg",
  "compile_warning",
  "env_logger",
  "ipnet",
