@@ -81,7 +81,6 @@ checksum = "3423d0624461b4e4d10a8f37c2d02f4f83de73f2e3e7705f168927528a49e7e7"
 [[package]]
 name = "compile_warning"
 version = "0.1.0"
-source = "git+https://github.com/KodiCraft/compile_warning#1928999b4536b5374fed2b779d8dce4fac8604da"
 
 [[package]]
 name = "crossbeam-channel"
