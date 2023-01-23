@@ -62,6 +62,11 @@ fn backup() {
     let file = root_prefix.to_owned() + "/hosts";
     let backup_file = root_prefix.to_owned() + "/hosts.d/backup.conf";
 
+    // Create target directory if it doesn't exist
+    let dir = root_prefix.to_owned() + "/hosts.d";
+    let res = std::fs::create_dir_all(&dir);
+    let _ = utils::unwrap_result_or_err(res, "Could not create hosts.d directory!", true);
+
     let res = std::fs::copy(&file, &backup_file);
     let _ = utils::unwrap_result_or_err(res, "Could not backup hosts file!", true);
 }
@@ -124,6 +129,6 @@ fn handler(res: notify::Result<notify::Event>) {
             debug!("Event: {:?}", event);
             let _ = run();
         },
-        Err(e) => error!("watch error: {:?}", e),
+        Err(e) => error!("An error has occured while watching: {:?}", e),
     }
 }
