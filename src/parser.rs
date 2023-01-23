@@ -183,8 +183,8 @@ impl FileReader {
         if line.starts_with("set ") {
             let set = line.trim_start_matches("set ");
             let mut split = set.splitn(2, '=');
-            let key = split.next().unwrap();
-            let value = split.next().unwrap();
+            let key = split.next().unwrap().trim();
+            let value = split.next().unwrap().trim();
             self.vars.insert(key.to_owned(), value.to_owned());
             return true;
         }
