@@ -1,9 +1,10 @@
 [package]
 name = "drophost"
-version = "0.2.7"
+version = "0.2.8"
 edition = "2021"
 license = "MIT"
 description = "A simple drop-in based /etc/hosts manager"
+readme = "README.md"
 authors = ["Kodi Craft <kodi@kdcf.me>"]
 repository = "https://github.com/KodiCraft/drophost"
 keywords = ["hosts", "drop-in", "dns", "networking"]
