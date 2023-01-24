@@ -2,9 +2,6 @@
 #![allow(dead_code)]
 #![allow(unused_imports)]
 
-#[cfg(feature = "interface")]
-compile_warning!(The "interface" feature is not currently implemented.);
-
 mod cli;
 mod writer;
 mod types;
@@ -25,6 +22,11 @@ use compile_warning::compile_warning;
 #[cfg(not(dev))]
 #[allow(unused_macros)]
 macro_rules! compile_warning {() => {};}
+
+#[cfg(feature = "interface")]
+compile_warning!(The "interface" feature is not currently implemented.);
+#[cfg(feature = "range")]
+compile_warning!(The "range" feature is not currently implemented.);
 
 static OPTS: Lazy<cli::Opts> = Lazy::new(|| cli::Opts::parse());
 
