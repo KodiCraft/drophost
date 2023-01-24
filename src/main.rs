@@ -20,7 +20,11 @@ use once_cell::sync::Lazy;
 use env_logger::{self, Builder};
 use log::*;
 use nix::{unistd::Uid, sys};
+#[cfg(dev)]
 use compile_warning::compile_warning;
+#[cfg(not(dev))]
+#[allow(unused_macros)]
+macro_rules! compile_warning {() => {};}
 
 static OPTS: Lazy<cli::Opts> = Lazy::new(|| cli::Opts::parse());
 

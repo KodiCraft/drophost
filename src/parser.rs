@@ -1,7 +1,11 @@
 use crate::utils::*;
 
 use log::*;
+#[cfg(dev)]
 use compile_warning::compile_warning;
+#[cfg(not(dev))]
+#[allow(unused_macros)]
+macro_rules! compile_warning {() => {};}
 
 use std::collections::HashMap;
 use std::fs::{self, File};
@@ -336,6 +340,8 @@ impl FileReader {
             #[cfg(feature = "ping")]
             "ping" => {
                 use oping::Ping;
+
+                compile_warning!(The "ping" feature is considered currently unstable, please report any bugs you encounter.);
 
                 let ip = IpAddr::from_str(attempt_value);
                 if ip.is_err() {
