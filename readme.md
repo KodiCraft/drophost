@@ -1,17 +1,19 @@
 # Drophost
+[![Build & Test](https://github.com/KodiCraft/drophost/actions/workflows/rust.yml/badge.svg)](https://github.com/KodiCraft/drophost/actions/workflows/rust.yml)
+[![GitHub last commit](https://img.shields.io/github/last-commit/KodiCraft/drophost)](https://github.com/KodiCraft/drophost)
 
 Drophost is a simple maintaining tool for your `/etc/hosts` file. It allows you to easily configure your hosts file dynamically using a drop-in directory.
 
 ## Installation
 
 ### Using Cargo
-
+[![crates.io](https://img.shields.io/crates/v/drophost.svg)](https://crates.io/crates/drophost)
 ```bash
 cargo install drophost
 ```
 
 ### Arch Linux (AUR)
-
+[![AUR maintainer](https://img.shields.io/aur/maintainer/drophost-git)](https://aur.archlinux.org/packages/drophost-git)
 ```bash
 yay -S drophost
 ```
