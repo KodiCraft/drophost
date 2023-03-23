@@ -1,4 +1,5 @@
 # Drophost
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/11222395fd0246a1ab25547475f380df)](https://app.codacy.com/gh/KodiCraft/drophost?utm_source=github.com&utm_medium=referral&utm_content=KodiCraft/drophost&utm_campaign=Badge_Grade)
 [![Build & Test](https://github.com/KodiCraft/drophost/actions/workflows/rust.yml/badge.svg)](https://github.com/KodiCraft/drophost/actions/workflows/rust.yml)
 [![GitHub last commit](https://img.shields.io/github/last-commit/KodiCraft/drophost)](https://github.com/KodiCraft/drophost)
 
