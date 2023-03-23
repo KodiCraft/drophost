@@ -1,6 +1,7 @@
 # Drophost
 [![Build & Test](https://github.com/KodiCraft/drophost/actions/workflows/rust.yml/badge.svg)](https://github.com/KodiCraft/drophost/actions/workflows/rust.yml)
 [![GitHub last commit](https://img.shields.io/github/last-commit/KodiCraft/drophost)](https://github.com/KodiCraft/drophost)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/2f7d9b9a122f4d26b6ce792d13909979)](https://app.codacy.com/gh/KodiCraft/drophost/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 
 Drophost is a simple maintaining tool for your `/etc/hosts` file. It allows you to easily configure your hosts file dynamically using a drop-in directory.
 
@@ -62,10 +63,10 @@ drophost -d
 
 Drophost comes with a few flags that can be used to customize its behavior.
 
-* `-b` or `--backup` will backup your current hosts file to the drop-in directory.
-* `-d` or `--dry-run` will run `drophost` without modifying your hosts file.
-* `-w` or `--watch` will watch the drop-in directory for changes and automatically update your hosts file when a change is detected.
-* `-h` or `--help` will display the help message.
+  * `-b` or `--backup` will backup your current hosts file to the drop-in directory.
+  * `-d` or `--dry-run` will run `drophost` without modifying your hosts file.
+  * `-w` or `--watch` will watch the drop-in directory for changes and automatically update your hosts file when a change is detected.
+  * `-h` or `--help` will display the help message.
 
 You may also pass the `-l` or `--log-level` flag to set the log level. The default log level is `info`. The available log levels are `trace`, `debug`, `info`, `warn`, `error`, and `off`.
 
@@ -167,13 +168,13 @@ Sometimes it can be useful to check if certain states are met that are not relat
 
 You can `try` any of the following conditions:
 
-* `file <path>`: Checks if a file exists at the given path.
-* `var <name>`: Checks if a variable is defined. **Variables can be an empty string and be considered "defined"**
-* `has <hostname>`: Checks if a hostname has been previously defined.
+  * `file <path>`: Checks if a file exists at the given path.
+  * `var <name>`: Checks if a variable is defined. **Variables can be an empty string and be considered "defined"**
+  * `has <hostname>`: Checks if a hostname has been previously defined.
 
 Additionally, if you compile the project with the `ping` feature, you can also `try` the following condition:
 
-* `ping <hostname>`: Checks if a hostname is reachable.
+  * `ping <hostname>`: Checks if a hostname is reachable.
 
 **The releases in the Github Actions tab are never compiled with additional features!**
 
