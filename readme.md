@@ -1,7 +1,7 @@
 # Drophost
 [![Build & Test](https://github.com/KodiCraft/drophost/actions/workflows/rust.yml/badge.svg)](https://github.com/KodiCraft/drophost/actions/workflows/rust.yml)
 [![GitHub last commit](https://img.shields.io/github/last-commit/KodiCraft/drophost)](https://github.com/KodiCraft/drophost)
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/2f7d9b9a122f4d26b6ce792d13909979)](https://app.codacy.com/gh/KodiCraft/drophost/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
+
 
 Drophost is a simple maintaining tool for your `/etc/hosts` file. It allows you to easily configure your hosts file dynamically using a drop-in directory.
 
