@@ -5,7 +5,10 @@ use log::*;
 use compile_warning::compile_warning;
 #[cfg(not(dev))]
 #[allow(unused_macros)]
-macro_rules! compile_warning {() => {};}
+macro_rules! compile_warning {
+    // Take any number of arguments and ignore them
+    ($($arg:tt)*) => {};
+}
 
 use std::collections::HashMap;
 use std::fs::{self, File};
