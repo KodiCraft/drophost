@@ -1,8 +1,6 @@
 use std::fmt::Debug;
 use std::{error::Error, fmt::Display};
 use log::*;
-#[cfg(feature = "backtrace")]
-use backtrace::Backtrace;
 
 #[derive(Debug)]
 struct CustomError {
@@ -34,8 +32,16 @@ impl Error for CustomError {
 #[cfg(feature = "backtrace")]
 macro_rules! print_trace {
     () => {
+        use backtrace::Backtrace;
         let backtrace = Backtrace::new();
-        trace!("Backtrace: {:?}", backtrace);
+        
+        trace!("Backtrace:");
+        // Get the Debug representation of the backtrace
+        let debug = format!("{:?}", backtrace);
+        // Print each line individually
+        for line in debug.lines() {
+            trace!("{}", line);
+        }
     }
 }
 

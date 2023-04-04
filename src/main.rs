@@ -5,6 +5,7 @@ mod cli;
 mod writer;
 mod types;
 mod parser;
+#[macro_use]
 mod utils;
 mod tests;
 
