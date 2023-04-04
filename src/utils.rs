@@ -1,8 +1,6 @@
 use std::fmt::Debug;
-use std::{error::Error, fmt::Display, backtrace};
+use std::{error::Error, fmt::Display};
 use log::*;
-use backtrace::BacktraceStatus::*;
-use backtrace::Backtrace;
 
 #[derive(Debug)]
 struct CustomError {
@@ -31,30 +29,26 @@ impl Error for CustomError {
     }
 }
 
-
+#[cfg(feature = "backtrace")]
 macro_rules! print_trace {
     () => {
-        let backtrace = Backtrace::capture();
-        match backtrace.status() {
-        Captured => {
-            for line in backtrace.to_string().lines() {
-                trace!("At: {}", line);
-            }
-        },
-
-        Disabled => {
-            trace!("Backtrace disabled, set RUST_BACKTRACE=1 to enable");
-        }
-
-        Unsupported => {
-            trace!("Backtrace unsupported");
-            debug!("Running on platform: {}", std::env::consts::OS);
-        }
-
-        _ => {
-            warn!("An unknown error occurred while capturing the backtrace")
+        use backtrace::Backtrace;
+        let backtrace = Backtrace::new();
+        
+        trace!("Backtrace:");
+        // Get the Debug representation of the backtrace
+        let debug = format!("{:?}", backtrace);
+        // Print each line individually
+        for line in debug.lines() {
+            trace!("{}", line);
         }
     }
+}
+
+#[cfg(not(feature = "backtrace"))]
+macro_rules! print_trace {
+    () => {
+        trace!("Backtrace disabled, enable with the 'backtrace' feature");
     };
 }
 

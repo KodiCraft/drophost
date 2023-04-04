@@ -1,4 +1,3 @@
-#![feature(backtrace_frames)]
 #![allow(dead_code)]
 #![allow(unused_imports)]
 
@@ -6,6 +5,7 @@ mod cli;
 mod writer;
 mod types;
 mod parser;
+#[macro_use]
 mod utils;
 mod tests;
 
@@ -21,7 +21,7 @@ use nix::{unistd::Uid, sys};
 use compile_warning::compile_warning;
 #[cfg(not(dev))]
 #[allow(unused_macros)]
-macro_rules! compile_warning {() => {};}
+macro_rules! compile_warning {($($tt:tt)*) => {}}
 
 #[cfg(feature = "interface")]
 compile_warning!(The "interface" feature is not currently implemented.);
