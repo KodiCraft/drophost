@@ -9,7 +9,7 @@ depend() {
   use net
 }
 
-command="/home/kodi/.cargo/bin/drophost"
+command="/root/.cargo/bin/drophost"
 command_args="-w -d"
 command_background="yes"
 pidfile="/run/drophost.pid"
