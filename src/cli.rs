@@ -7,9 +7,21 @@ pub struct Opts {
     #[clap(short, long, default_value = "false")]
     pub dry_run: bool,
 
+    /// Check Config, parse all files in the hosts.d directory and exit
+    #[clap(short, long, default_value = "false")]
+    pub check: bool,
+
     /// Watch the hosts.d directory for changes and update the hosts file
     #[clap(short, long, default_value = "false")]
     pub watch: bool,
+
+    /// Fork to background and run as a daemon. Ignored if --watch is set
+    #[clap(short, long, default_value = "false")]
+    pub daemon: bool,
+
+    /// PID file location (only used when running as a daemon)
+    #[clap(short, long, default_value = "/run/drophost.pid")]
+    pub pid_file: String,
 
     /// Save current hosts file to a backup file
     #[clap(short, long, default_value = "false")]

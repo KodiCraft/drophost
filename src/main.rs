@@ -16,7 +16,10 @@ use clap::Parser;
 use once_cell::sync::Lazy;
 use env_logger::{self, Builder};
 use log::*;
-use nix::{unistd::Uid, sys};
+use nix::{unistd::Uid, unistd::fork, unistd::ForkResult, sys};
+use std::io::Write;
+
+
 #[cfg(dev)]
 use compile_warning::compile_warning;
 #[cfg(not(dev))]
@@ -44,7 +47,16 @@ async fn main() {
         backup();
     }
 
-    run();
+    run(!OPTS.check);
+
+    if OPTS.daemon && OPTS.watch {
+        daemonize(&OPTS.pid_file);
+    }
+
+    if OPTS.daemon && !OPTS.watch {
+        error!("Cannot run as daemon without --watch");
+        std::process::exit(1);
+    }
 
     if OPTS.watch {
         watch().await;
@@ -77,7 +89,7 @@ fn backup() {
     let _ = utils::unwrap_result_or_err(res, "Could not backup hosts file!", true);
 }
 
-fn run() {
+fn run(write: bool) {
     let root_prefix: &str;
     if OPTS.dry_run {
         info!("Dry run, not replacing system files");
@@ -86,7 +98,7 @@ fn run() {
         root_prefix = "/etc";
     }
 
-    if !Uid::current().is_root() && !OPTS.dry_run {
+    if !Uid::current().is_root() && !OPTS.dry_run && write {
         error!("Must run as root! Use --dry-run to test without root");
         std::process::exit(1);
     }
@@ -97,9 +109,36 @@ fn run() {
 
     dir_reader.parse_all();
 
-    let output_path = root_prefix.to_owned() + "/hosts";
+    if write {
+        let output_path = root_prefix.to_owned() + "/hosts";
 
-    writer::write_hosts_to_file(&dir_reader.hosts, &output_path);
+        writer::write_hosts_to_file(&dir_reader.hosts, &output_path);
+    } else {
+        info!("Hosts file would be written to: {}", root_prefix.to_owned() + "/hosts");
+    }
+}
+
+fn daemonize(pidfile: &str) {
+    let pid = unsafe { fork() };
+    match pid {
+        Ok(ForkResult::Parent { child, .. }) => {
+            info!("Forked to background, child PID: {}", child);
+            let mut file = std::fs::File::create(pidfile).unwrap();
+            file.write_all(child.to_string().as_bytes()).unwrap();
+            std::process::exit(0);
+        },
+        Ok(ForkResult::Child) => {
+            info!("Running as daemon");
+            let _ = run(!OPTS.check);
+            if OPTS.watch {
+                watch();
+            }
+        },
+        Err(e) => {
+            error!("Could not fork to background: {}", e);
+            std::process::exit(1);
+        }
+    }
 }
 
 async fn watch() {
@@ -133,7 +172,7 @@ fn handler(res: notify::Result<notify::Event>) {
     match res {
         Ok(event) => {
             debug!("Event: {:?}", event);
-            let _ = run();
+            let _ = run(!OPTS.check);
         },
         Err(e) => error!("An error has occured while watching: {:?}", e),
     }
