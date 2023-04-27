@@ -15,8 +15,8 @@ pub struct Opts {
     #[clap(short, long, default_value = "false")]
     pub watch: bool,
 
-    /// Fork to background and run as a daemon. Ignored if --watch is set
-    #[clap(short, long, default_value = "false")]
+    /// Fork to background and run as a daemon. Requires --watch
+    #[clap(long, default_value = "false")]
     pub daemon: bool,
 
     /// PID file location (only used when running as a daemon)
