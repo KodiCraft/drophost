@@ -30,4 +30,8 @@ pub struct Opts {
     /// Log level: trace, debug, info, warn, error, off
     #[clap(short, long, default_value = "info")]
     pub log_level: log::LevelFilter,
+
+    /// Log file location, must be writable by the user running drophost
+    #[clap(long, default_value = "/var/log/drophost.log")]
+    pub log_file: String,
 }

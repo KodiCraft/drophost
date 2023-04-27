@@ -10,6 +10,6 @@ depend() {
 }
 
 command="/root/.cargo/bin/drophost"
-command_args="-w -d"
-command_background="yes"
+command_args="--watch"
+command_args_background="--daemon"
 pidfile="/run/drophost.pid"
