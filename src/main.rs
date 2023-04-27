@@ -42,6 +42,7 @@ async fn main() {
 
     debug!("Starting with options: {:?}", OPTS);
     debug!("Running as user: {}", Uid::current().as_raw());
+    info!("Starting drophost!");
 
     if OPTS.backup {
         backup();
@@ -113,6 +114,7 @@ fn run(write: bool) {
         let output_path = root_prefix.to_owned() + "/hosts";
 
         writer::write_hosts_to_file(&dir_reader.hosts, &output_path);
+        info!("Updated hosts file!")
     } else {
         info!("Hosts file would be written to: {}", root_prefix.to_owned() + "/hosts");
     }
@@ -159,6 +161,7 @@ async fn watch() {
 
     let path = Path::new(&dir);
 
+    info!("Watching directory: {}", path.display());
     let mut watcher = recommended_watcher(handler).unwrap();
 
     watcher.watch(&path, RecursiveMode::Recursive).unwrap();
@@ -172,6 +175,7 @@ fn handler(res: notify::Result<notify::Event>) {
     match res {
         Ok(event) => {
             debug!("Event: {:?}", event);
+            info!("Change detected, re-running drophost's parser");
             let _ = run(!OPTS.check);
         },
         Err(e) => error!("An error has occured while watching: {:?}", e),

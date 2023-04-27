@@ -91,10 +91,12 @@ impl DirReader {
 
     pub fn next(&mut self) -> Option<FileReader> {
         if self.file_index >= self.files.len() {
+            info!("No more files to parse!");
             return None;
         }
 
         let file = &self.files[self.file_index];
+        info!("Parsing file '{}'...", file.to_str().unwrap());
         self.file_index += 1;
 
         Some(FileReader::new(file, self.vars.clone()))
