@@ -21,7 +21,7 @@ iprange = { version = "0.6.7", optional = true }
 network-interface = { version = "1.0.2", optional = true }
 ipnet = { version = "2.8.0", optional = true }
 tokio = { version = "1.32.0", features = ["macros", "rt", "rt-multi-thread"] }
-notify = "6.1.0"
+notify = "6.1.1"
 once_cell = "1.18.0"
 env_logger = "0.10.0"
 backtrace = { version = "0.3.68", optional = true, features = ["std"] }
