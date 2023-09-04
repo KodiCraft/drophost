@@ -32,6 +32,3 @@ ping = ["dep:oping"]
 range = ["dep:iprange", "dep:network-interface", "dep:ipnet"]
 interface = ["dep:network-interface"]
 backtrace = ["dep:backtrace"]
-
-[dev-dependencies]
-compile_warning = { path = "compile_warning", version = "0.1.0" }

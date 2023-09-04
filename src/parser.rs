@@ -1,14 +1,6 @@
 use crate::utils::*;
 
 use log::*;
-#[cfg(dev)]
-use compile_warning::compile_warning;
-#[cfg(not(dev))]
-#[allow(unused_macros)]
-macro_rules! compile_warning {
-    // Take any number of arguments and ignore them
-    ($($arg:tt)*) => {};
-}
 
 use std::collections::HashMap;
 use std::fs::{self, File};
@@ -346,7 +338,7 @@ impl FileReader {
             "ping" => {
                 use oping::Ping;
 
-                compile_warning!(The "ping" feature is considered currently unstable, please report any bugs you encounter.);
+                warn!("Warning! The 'ping' feature is considered unstable. Please report any bugs you find!");
 
                 let ip = IpAddr::from_str(attempt_value);
                 if ip.is_err() {
