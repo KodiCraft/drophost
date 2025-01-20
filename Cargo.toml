@@ -14,7 +14,7 @@ categories = ["network-programming"]
 
 [dependencies]
 clap = { version = "4.5.26", features = ["derive"] }
-log = "0.4.22"
+log = "0.4.25"
 nix = "0.29.0"
 oping = { version = "0.4.0", optional = true }
 iprange = { version = "0.6.7", optional = true }
